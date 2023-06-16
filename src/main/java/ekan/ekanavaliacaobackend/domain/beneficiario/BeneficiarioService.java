@@ -28,12 +28,15 @@ public class BeneficiarioService {
         return dtoList;
     }
 
-    public BeneficiarioDTO get(Long id) {
-        return repository.findById(id).orElseThrow(EntityNotFoundException::new).toDTO();
+    public BeneficiarioComDocumentosDTO get(Long id) {
+        return new BeneficiarioComDocumentosDTO(this.findById(id));
     }
 
     public List<DocumentoDTO> getDocuments(Long id) {
-        return documentoRepository.findByBeneficiarioId(id).stream().map(Documento::toDTO).collect(toList());
+        this.findById(id);
+        var documentos = documentoRepository.findByBeneficiarioId(id);
+        var list = documentos.stream().map(Documento::toDTO).collect(toList());
+        return list;
     }
 
     @Transactional
@@ -44,13 +47,19 @@ public class BeneficiarioService {
 
     @Transactional
     public BeneficiarioDTO update(BeneficiarioDTO dto) {
-        var beneficiario = repository.findById(dto.getId()).orElseThrow(EntityNotFoundException::new);
+        var beneficiario = this.findById(dto.getId());
         beneficiario.update(dto);
         return beneficiario.toDTO();
     }
 
+    @Transactional
     public void delete(Long id) {
-        repository.deleteById(id);
+        Beneficiario beneficiario = this.findById(id);
+        repository.delete(beneficiario);
+    }
+
+    private Beneficiario findById(Long id) {
+        return repository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
 }

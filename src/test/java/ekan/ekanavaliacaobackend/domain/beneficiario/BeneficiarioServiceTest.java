@@ -81,15 +81,16 @@ class BeneficiarioServiceTest {
     }
 
     @Test
+    @Transactional
     void testGet() {
         // Given
         Long id = beneficiario.getId();
 
         // When
-        BeneficiarioDTO beneficiario1 = service.get(id);
+        BeneficiarioComDocumentosDTO beneficiario1 = service.get(id);
 
         // Then
-        assertThat(beneficiario1).isEqualTo(beneficiario.toDTO());
+        assertThat(beneficiario1).isEqualTo(new BeneficiarioComDocumentosDTO(beneficiario));
         assertThat(beneficiario1);
     }
 

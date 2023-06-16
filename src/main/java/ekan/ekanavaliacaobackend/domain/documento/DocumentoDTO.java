@@ -1,6 +1,7 @@
 package ekan.ekanavaliacaobackend.domain.documento;
 
 import ekan.ekanavaliacaobackend.domain.beneficiario.Beneficiario;
+import ekan.ekanavaliacaobackend.domain.beneficiario.BeneficiarioDTO;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,5 @@ public class DocumentoDTO {
     private String descricao;
     private LocalDateTime dataInclusao;
     private LocalDateTime dataAtualizacao;
-    private Beneficiario beneficiario;
 
 }
