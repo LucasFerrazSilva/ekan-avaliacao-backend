@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface DocumentoRepository extends JpaRepository<Documento, Long> {
 
-    List<Documento> findByBeneficiario(Beneficiario beneficiario);
+    List<Documento> findByBeneficiarioId(Long beneficiarioId);
 
 }

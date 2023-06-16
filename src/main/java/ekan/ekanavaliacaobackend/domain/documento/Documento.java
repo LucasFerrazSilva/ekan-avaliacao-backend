@@ -1,16 +1,14 @@
 package ekan.ekanavaliacaobackend.domain.documento;
 
 import ekan.ekanavaliacaobackend.domain.beneficiario.Beneficiario;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="TB_BENEFICIARIOS")
+@Table(name="TB_DOCUMENTOS")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -18,6 +16,8 @@ import java.time.LocalDateTime;
 @ToString(exclude="beneficiario")
 public class Documento {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String tipoDocumento;
     private String descricao;
@@ -26,5 +26,18 @@ public class Documento {
     @ManyToOne
     @JoinColumn(name="beneficiario_id")
     private Beneficiario beneficiario;
+
+    public Documento(NovoDocumentoDTO documentoDTO, Beneficiario beneficiario) {
+        this.tipoDocumento = documentoDTO.getTipoDocumento();
+        this.descricao = documentoDTO.getDescricao();
+        this.dataInclusao = LocalDateTime.now();
+        this.beneficiario = beneficiario;
+    }
+
+    public DocumentoDTO toDTO() {
+        DocumentoDTO dto = new DocumentoDTO();
+        BeanUtils.copyProperties(this, dto);
+        return dto;
+    }
 
 }

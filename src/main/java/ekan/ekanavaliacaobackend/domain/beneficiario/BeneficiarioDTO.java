@@ -2,11 +2,15 @@ package ekan.ekanavaliacaobackend.domain.beneficiario;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Data @AllArgsConstructor
+@Data
+@AllArgsConstructor @NoArgsConstructor
+@EqualsAndHashCode(of="id")
 public class BeneficiarioDTO {
 
     private Long id;
