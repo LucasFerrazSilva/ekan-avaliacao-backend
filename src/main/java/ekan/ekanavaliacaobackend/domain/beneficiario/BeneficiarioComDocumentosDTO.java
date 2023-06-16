@@ -28,13 +28,13 @@ public class BeneficiarioComDocumentosDTO {
 
     public BeneficiarioComDocumentosDTO(Beneficiario beneficiario) {
         this(
-                beneficiario.getId(),
-                beneficiario.getNome(),
-                beneficiario.getTelefone(),
-                beneficiario.getDataNascimento(),
-                beneficiario.getDataInclusao(),
-                beneficiario.getDataAtualizacao(),
-                beneficiario.getDocumentos().stream().map(Documento::toDTO).collect(toList())
+            beneficiario.getId(),
+            beneficiario.getNome(),
+            beneficiario.getTelefone(),
+            beneficiario.getDataNascimento(),
+            beneficiario.getDataInclusao(),
+            beneficiario.getDataAtualizacao(),
+            beneficiario.getDocumentos().stream().map(Documento::toDTO).collect(toList())
         );
     }
 

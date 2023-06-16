@@ -47,7 +47,7 @@ public class BeneficiarioController {
     @Transactional
     public ResponseEntity create(@RequestBody @Valid NovoBeneficiarioDTO dto, UriComponentsBuilder uriComponentsBuilder) {
         BeneficiarioDTO beneficiarioDTO = service.create(dto);
-        URI uri = uriComponentsBuilder.path("/beneficiario/{id}").buildAndExpand(beneficiarioDTO.getId()).toUri();
+        URI uri = uriComponentsBuilder.path("/beneficiarios/{id}").buildAndExpand(beneficiarioDTO.getId()).toUri();
         return ResponseEntity.created(uri).body(beneficiarioDTO);
     }
 

@@ -1,5 +1,6 @@
 package ekan.ekanavaliacaobackend.domain.beneficiario;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(of="id")
 public class BeneficiarioDTO {
 
+    @NotNull
     private Long id;
     private String nome;
     private String telefone;
