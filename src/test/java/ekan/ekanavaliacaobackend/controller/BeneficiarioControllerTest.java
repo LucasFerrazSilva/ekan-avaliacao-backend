@@ -1,12 +1,12 @@
 package ekan.ekanavaliacaobackend.controller;
 
 import ekan.ekanavaliacaobackend.domain.beneficiario.*;
+import ekan.ekanavaliacaobackend.domain.documento.AtualizaDocumentoDTO;
 import ekan.ekanavaliacaobackend.domain.documento.Documento;
 import ekan.ekanavaliacaobackend.domain.documento.NovoDocumentoDTO;
 import ekan.ekanavaliacaobackend.infra.exception.ValidationExceptionDataDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,12 +18,12 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
@@ -43,6 +43,8 @@ class BeneficiarioControllerTest {
     private JacksonTester<BeneficiarioDTO> beneficiarioDTOJackson;
     @Autowired
     private JacksonTester<BeneficiarioComDocumentosDTO> beneficiarioComDocumentosDTOJackson;
+    @Autowired
+    private JacksonTester<AtualizaBeneficiarioDTO> atualizaBeneficiarioDTOJackson;
     @Autowired
     private JacksonTester<NovoBeneficiarioDTO> novoBeneficiarioDTOJackson;
     @Autowired
@@ -147,10 +149,17 @@ class BeneficiarioControllerTest {
     void testUpdate() throws Exception {
         // Given
         var beneficiario = createBeneficiario();
-        var dto = beneficiario.toDTO();
-        String json = beneficiarioDTOJackson.write(dto).getJson();
+        var documentosDTOs =
+                beneficiario.getDocumentos().stream().map(
+                        documento -> new AtualizaDocumentoDTO(documento.getId(), documento.getTipoDocumento(), documento.getDescricao())
+                ).collect(toList());
+        AtualizaBeneficiarioDTO dto = new AtualizaBeneficiarioDTO(beneficiario.getId(), beneficiario.getNome(), beneficiario.getTelefone(), beneficiario.getDataNascimento(), documentosDTOs);
+        var json = atualizaBeneficiarioDTOJackson.write(dto).getJson();
 
-        when(service.update(any())).thenReturn(dto);
+        var expectedDTO = new BeneficiarioComDocumentosDTO(beneficiario);
+        String expectedJson = beneficiarioComDocumentosDTOJackson.write(expectedDTO).getJson();
+
+        when(service.update(any())).thenReturn(expectedDTO);
 
         // When
         MockHttpServletResponse response =
@@ -162,7 +171,7 @@ class BeneficiarioControllerTest {
 
         // Then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).isEqualTo(json);
+        assertThat(response.getContentAsString()).isEqualTo(expectedJson);
     }
 
     @Test

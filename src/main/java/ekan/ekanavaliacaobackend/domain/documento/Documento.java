@@ -7,6 +7,8 @@ import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDateTime;
 
+import static org.springframework.util.StringUtils.hasText;
+
 @Entity
 @Table(name="TB_DOCUMENTOS")
 @NoArgsConstructor
@@ -34,10 +36,22 @@ public class Documento {
         this.beneficiario = beneficiario;
     }
 
+    public Documento(AtualizaDocumentoDTO documentoDTO, Beneficiario beneficiario) {
+        this.tipoDocumento = documentoDTO.getTipoDocumento();
+        this.descricao = documentoDTO.getDescricao();
+        this.dataInclusao = LocalDateTime.now();
+        this.beneficiario = beneficiario;
+    }
+
     public DocumentoDTO toDTO() {
         DocumentoDTO dto = new DocumentoDTO();
         BeanUtils.copyProperties(this, dto);
         return dto;
     }
 
+    public void update(AtualizaDocumentoDTO dto) {
+        this.tipoDocumento = hasText(dto.getTipoDocumento()) ? dto.getTipoDocumento() : this.tipoDocumento;
+        this.descricao = hasText(dto.getDescricao()) ? dto.getDescricao() : this.descricao;
+        this.dataAtualizacao = LocalDateTime.now();
+    }
 }

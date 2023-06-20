@@ -1,9 +1,6 @@
 package ekan.ekanavaliacaobackend.controller;
 
-import ekan.ekanavaliacaobackend.domain.beneficiario.BeneficiarioComDocumentosDTO;
-import ekan.ekanavaliacaobackend.domain.beneficiario.BeneficiarioDTO;
-import ekan.ekanavaliacaobackend.domain.beneficiario.BeneficiarioService;
-import ekan.ekanavaliacaobackend.domain.beneficiario.NovoBeneficiarioDTO;
+import ekan.ekanavaliacaobackend.domain.beneficiario.*;
 import ekan.ekanavaliacaobackend.domain.documento.DocumentoDTO;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -53,8 +50,8 @@ public class BeneficiarioController {
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity update(@RequestBody @Valid BeneficiarioDTO dto) {
-        BeneficiarioDTO beneficiarioDTO = service.update(dto);
+    public ResponseEntity update(@RequestBody @Valid AtualizaBeneficiarioDTO dto) {
+        BeneficiarioComDocumentosDTO beneficiarioDTO = service.update(dto);
 
         return ResponseEntity.ok(beneficiarioDTO);
     }

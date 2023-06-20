@@ -1,9 +1,6 @@
 package ekan.ekanavaliacaobackend.domain.beneficiario;
 
-import ekan.ekanavaliacaobackend.domain.documento.Documento;
-import ekan.ekanavaliacaobackend.domain.documento.DocumentoDTO;
-import ekan.ekanavaliacaobackend.domain.documento.DocumentoRepository;
-import ekan.ekanavaliacaobackend.domain.documento.NovoDocumentoDTO;
+import ekan.ekanavaliacaobackend.domain.documento.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +14,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
@@ -108,7 +106,7 @@ class BeneficiarioServiceTest {
     void testGetDocuments() {
         // Given
         Long id = beneficiario.getId();
-        var expectedDocuments = beneficiario.getDocumentos().stream().map(Documento::toDTO).collect(Collectors.toList());
+        var expectedDocuments = beneficiario.getDocumentos().stream().map(Documento::toDTO).collect(toList());
 
         // When
         List<DocumentoDTO> documents = service.getDocuments(id);
@@ -152,10 +150,17 @@ class BeneficiarioServiceTest {
     @Transactional
     void testUpdate() {
         // Given
-        var dto = beneficiario.toDTO();
-        dto.setNome("Novo Nome");
-        dto.setTelefone("Novo telefone");
-        dto.setDataNascimento(LocalDate.of(1999, 12, 31));
+        var nome = "Novo nome";
+        var telefone = "(11) 99999-9999";
+        var dataNascimento = LocalDate.of(1999, 12, 31);
+
+        var novoTipoDocumento = "Novo tipo de documento";
+        var novaDescricao = "Nova descrição";
+        var documentosDTOs =
+                beneficiario.getDocumentos().stream().map(
+                        documento -> new AtualizaDocumentoDTO(documento.getId(), novoTipoDocumento, novaDescricao)
+                ).collect(toList());
+        var dto = new AtualizaBeneficiarioDTO(beneficiario.getId(), nome, telefone, dataNascimento, documentosDTOs);
 
         // When
         service.update(dto);
@@ -167,6 +172,10 @@ class BeneficiarioServiceTest {
         assertThat(beneficiarioAtualizado.getDataNascimento()).isEqualTo(dto.getDataNascimento());
         assertThat(beneficiarioAtualizado.getDataAtualizacao()).isNotNull();
         assertThat(beneficiarioAtualizado.getDocumentos()).isNotEmpty();
+        var documento = beneficiarioAtualizado.getDocumentos().get(0);
+        assertThat(documento.getTipoDocumento()).isEqualTo(novoTipoDocumento);
+        assertThat(documento.getDescricao()).isEqualTo(novaDescricao);
+        assertThat(documento.getDataAtualizacao()).isNotNull();
     }
 
     @Test

@@ -46,10 +46,10 @@ public class BeneficiarioService {
     }
 
     @Transactional
-    public BeneficiarioDTO update(BeneficiarioDTO dto) {
+    public BeneficiarioComDocumentosDTO update(AtualizaBeneficiarioDTO dto) {
         var beneficiario = this.findById(dto.getId());
         beneficiario.update(dto);
-        return beneficiario.toDTO();
+        return new BeneficiarioComDocumentosDTO(beneficiario);
     }
 
     @Transactional

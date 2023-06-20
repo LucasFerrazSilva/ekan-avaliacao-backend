@@ -1,6 +1,6 @@
 package ekan.ekanavaliacaobackend.domain.beneficiario;
 
-import ekan.ekanavaliacaobackend.domain.documento.Documento;
+import ekan.ekanavaliacaobackend.domain.documento.AtualizaDocumentoDTO;
 import ekan.ekanavaliacaobackend.domain.documento.NovoDocumentoDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -11,11 +11,13 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Data @AllArgsConstructor
-public class NovoBeneficiarioDTO {
+@Data
+@AllArgsConstructor
+public class AtualizaBeneficiarioDTO {
 
+    @NotNull
+    private Long id;
     @NotBlank
     private String nome;
     @NotBlank
@@ -23,6 +25,5 @@ public class NovoBeneficiarioDTO {
     @NotNull
     private LocalDate dataNascimento;
     @Valid
-    private List<NovoDocumentoDTO> documentosDTOs;
-
+    private List<AtualizaDocumentoDTO> documentosDTOs;
 }
