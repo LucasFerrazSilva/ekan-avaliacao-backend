@@ -25,5 +25,6 @@ public class AtualizaBeneficiarioDTO {
     @NotNull
     private LocalDate dataNascimento;
     @Valid
+    @NotEmpty
     private List<AtualizaDocumentoDTO> documentosDTOs;
 }

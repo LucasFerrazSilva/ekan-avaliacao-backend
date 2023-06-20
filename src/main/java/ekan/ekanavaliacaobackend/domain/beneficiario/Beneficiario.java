@@ -5,13 +5,10 @@ import ekan.ekanavaliacaobackend.domain.documento.Documento;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.beans.BeanUtils;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.springframework.util.StringUtils.hasText;
@@ -33,7 +30,7 @@ public class Beneficiario {
     private LocalDate dataNascimento;
     private LocalDateTime dataInclusao;
     private LocalDateTime dataAtualizacao;
-    @OneToMany(mappedBy = "beneficiario", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "beneficiario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Documento> documentos;
 
     public Beneficiario(NovoBeneficiarioDTO dto) {
@@ -58,17 +55,8 @@ public class Beneficiario {
     private void updateDocumentos(AtualizaBeneficiarioDTO dto) {
         List<AtualizaDocumentoDTO> documentosDTOs = dto.getDocumentosDTOs();
 
-        if (documentosDTOs == null || documentosDTOs.isEmpty()) {
-            this.documentos = null;
-            return;
-        }
-
-        if (this.documentos == null || this.documentos.isEmpty())
-            this.documentos = new ArrayList<>();
-        else {
-            List<Long> documentosIds = documentosDTOs.stream().filter(item -> item.getId() != null).map(AtualizaDocumentoDTO::getId).collect(toList());
-            this.documentos = this.documentos.stream().filter(documento -> documentosIds.contains(documento.getId())).collect(toList());
-        }
+        var ids = documentosDTOs.stream().filter(item -> item.getId() != null).map(AtualizaDocumentoDTO::getId).collect(toList());
+        this.documentos.removeIf(documento -> !ids.contains(documento.getId()));
 
         documentosDTOs.forEach(documentoDTO -> {
             if (documentoDTO.getId() != null) {

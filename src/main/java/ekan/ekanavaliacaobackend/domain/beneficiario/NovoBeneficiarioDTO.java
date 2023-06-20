@@ -23,6 +23,7 @@ public class NovoBeneficiarioDTO {
     @NotNull
     private LocalDate dataNascimento;
     @Valid
+    @NotEmpty
     private List<NovoDocumentoDTO> documentosDTOs;
 
 }
