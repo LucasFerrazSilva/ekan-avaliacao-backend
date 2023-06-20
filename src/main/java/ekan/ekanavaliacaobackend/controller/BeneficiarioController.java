@@ -43,7 +43,7 @@ public class BeneficiarioController {
     @PostMapping
     @Transactional
     public ResponseEntity create(@RequestBody @Valid NovoBeneficiarioDTO dto, UriComponentsBuilder uriComponentsBuilder) {
-        BeneficiarioDTO beneficiarioDTO = service.create(dto);
+        BeneficiarioComDocumentosDTO beneficiarioDTO = service.create(dto);
         URI uri = uriComponentsBuilder.path("/beneficiarios/{id}").buildAndExpand(beneficiarioDTO.getId()).toUri();
         return ResponseEntity.created(uri).body(beneficiarioDTO);
     }

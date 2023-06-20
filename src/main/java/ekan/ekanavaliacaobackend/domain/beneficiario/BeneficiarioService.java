@@ -40,15 +40,17 @@ public class BeneficiarioService {
     }
 
     @Transactional
-    public BeneficiarioDTO create(NovoBeneficiarioDTO dto) {
+    public BeneficiarioComDocumentosDTO create(NovoBeneficiarioDTO dto) {
         var beneficiario = new Beneficiario(dto);
-        return repository.save(beneficiario).toDTO();
+        repository.save(beneficiario);
+        return new BeneficiarioComDocumentosDTO(beneficiario);
     }
 
     @Transactional
     public BeneficiarioComDocumentosDTO update(AtualizaBeneficiarioDTO dto) {
         var beneficiario = this.findById(dto.getId());
         beneficiario.update(dto);
+        repository.save(beneficiario);
         return new BeneficiarioComDocumentosDTO(beneficiario);
     }
 

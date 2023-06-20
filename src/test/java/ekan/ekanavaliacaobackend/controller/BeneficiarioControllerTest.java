@@ -91,14 +91,14 @@ class BeneficiarioControllerTest {
     void testCreate() throws Exception {
         // Given
         var beneficiario = createBeneficiario();
-        var dto = beneficiario.toDTO();
+        var dto = new BeneficiarioComDocumentosDTO(beneficiario);
 
         var documento = beneficiario.getDocumentos().get(0);
         var documentDTO = new NovoDocumentoDTO(documento.getTipoDocumento(), documento.getDescricao());
         var novoBeneficiarioDTO = new NovoBeneficiarioDTO(beneficiario.getNome(), beneficiario.getTelefone(), beneficiario.getDataNascimento(), List.of(documentDTO));
 
         String novoBeneficiarioDTOJson = novoBeneficiarioDTOJackson.write(novoBeneficiarioDTO).getJson();
-        String expectedJson = beneficiarioDTOJackson.write(dto).getJson();
+        String expectedJson = beneficiarioComDocumentosDTOJackson.write(dto).getJson();
 
         when(service.create(any())).thenReturn(dto);
 

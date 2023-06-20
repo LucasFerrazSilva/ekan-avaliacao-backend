@@ -9,7 +9,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class AtualizaDocumentoDTO {
 
-    @NotNull
     private Long id;
     @NotBlank
     private String tipoDocumento;
